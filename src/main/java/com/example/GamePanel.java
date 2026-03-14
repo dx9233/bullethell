@@ -9,14 +9,14 @@ import java.awt.event.KeyEvent;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1440;
+    private static final int HEIGHT = 900;
 
-    private Player player;
+    private final Player player;
 
-    private List<Bullet> bullets;
-    private List<Enemy> enemies;
-    private List<Bullet> enemyBullets;
+    private final List<Bullet> bullets;
+    private final List<Enemy> enemies;
+    private final List<Bullet> enemyBullets;
 
     public GamePanel() {
 

@@ -12,7 +12,7 @@ public class Player {
     private int speed = 5;
     private boolean movingLeft, movingRight, shooting;
     private long lastShotTime;
-    private static final long FIRE_RATE = 200; // 200 мс между выстрелами
+    private static final long FIRE_RATE = 200;
 
     public Player(int x, int y) {
         this.x = x;
