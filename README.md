@@ -11,3 +11,11 @@ First Version
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" width="40" height="40" alt="Java" />
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gradle/gradle-original.svg" width="40" height="40" alt="Gradle" />
 </p>
+
+# Control 
+
+W - ahead
+A - left
+S - down
+D - right
+Space - shoot

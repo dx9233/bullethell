@@ -9,8 +9,8 @@ import java.awt.event.KeyEvent;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    private static final int WIDTH = 1440;
-    private static final int HEIGHT = 900;
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 720;
 
     private final Player player;
 
@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
         setFocusable(true);
         addKeyListener(new KeyHandler());
 
-        player = new Player(WIDTH / 2, HEIGHT - 50);
+        player = new Player(WIDTH / 2, HEIGHT - 60);
 
         bullets = new ArrayList<>();
         enemies = new ArrayList<>();
@@ -59,8 +59,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void update() {
 
-        player.update(bullets, WIDTH);
+        player.update(bullets, WIDTH, HEIGHT);
 
+        // обновление пуль игрока
         for (int i = bullets.size() - 1; i >= 0; i--) {
 
             Bullet bullet = bullets.get(i);
@@ -72,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
 
+        // обновление врагов
         for (int i = enemies.size() - 1; i >= 0; i--) {
 
             Enemy enemy = enemies.get(i);
@@ -83,6 +85,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         }
 
+        // обновление пуль врагов
         for (int i = enemyBullets.size() - 1; i >= 0; i--) {
 
             Bullet bullet = enemyBullets.get(i);
@@ -96,7 +99,6 @@ public class GamePanel extends JPanel implements Runnable {
 
         spawnEnemies();
         checkCollisions();
-
     }
 
     private void spawnEnemies() {
@@ -111,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void checkCollisions() {
 
+        // попадание пуль игрока по врагам
         List<Integer> bulletsToRemove = new ArrayList<>();
         List<Integer> enemiesToRemove = new ArrayList<>();
 
@@ -134,14 +137,38 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         for (int i = bulletsToRemove.size() - 1; i >= 0; i--) {
-
             bullets.remove((int) bulletsToRemove.get(i));
-
         }
 
         for (int i = enemiesToRemove.size() - 1; i >= 0; i--) {
-
             enemies.remove((int) enemiesToRemove.get(i));
+        }
+
+        // попадание пуль врагов по игроку
+        for (int i = enemyBullets.size() - 1; i >= 0; i--) {
+
+            Bullet bullet = enemyBullets.get(i);
+
+            if (isCollidingWithPlayer(bullet)) {
+
+                player.takeDamage(1);
+                enemyBullets.remove(i);
+
+            }
+
+        }
+
+        // столкновение игрока с врагом
+        for (int i = enemies.size() - 1; i >= 0; i--) {
+
+            Enemy enemy = enemies.get(i);
+
+            if (isCollidingPlayerEnemy(enemy)) {
+
+                player.takeDamage(2);
+                enemies.remove(i);
+
+            }
 
         }
 
@@ -154,6 +181,34 @@ public class GamePanel extends JPanel implements Runnable {
 
         return bulletRect.intersects(enemyRect);
 
+    }
+
+    private boolean isCollidingWithPlayer(Bullet bullet) {
+
+        Rectangle bulletRect = new Rectangle(bullet.getX(), bullet.getY(), 5, 5);
+
+        Rectangle playerRect = new Rectangle(
+                player.getX(),
+                player.getY(),
+                player.getWidth(),
+                player.getHeight()
+        );
+
+        return bulletRect.intersects(playerRect);
+    }
+
+    private boolean isCollidingPlayerEnemy(Enemy enemy) {
+
+        Rectangle enemyRect = new Rectangle(enemy.getX(), enemy.getY(), 20, 20);
+
+        Rectangle playerRect = new Rectangle(
+                player.getX(),
+                player.getY(),
+                player.getWidth(),
+                player.getHeight()
+        );
+
+        return enemyRect.intersects(playerRect);
     }
 
     @Override
@@ -174,6 +229,10 @@ public class GamePanel extends JPanel implements Runnable {
         for (Bullet bullet : enemyBullets) {
             bullet.draw(g);
         }
+
+        // UI
+        g.setColor(Color.WHITE);
+        g.drawString("HP: " + player.getHp(), 10, 20);
 
     }
 
